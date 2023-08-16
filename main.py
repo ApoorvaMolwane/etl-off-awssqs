@@ -2,7 +2,7 @@ import json
 import psycopg2
 from datetime import datetime
 
-# Received message body from AWS SQS
+# Sample received message from AWS SQS
 received_message = '''
 {
     "user_id": "123",
@@ -17,9 +17,12 @@ received_message = '''
 # Load received message as JSON
 message_data = json.loads(received_message)
 
-# Mask device_id and ip, while preserving their uniqueness
-masked_device_id = f"device_{hash(message_data['device_id'])}"
-masked_ip = f"ip_{hash(message_data['ip'])}"
+# Mask PII data
+def mask_data(data):
+    return f"masked_{hash(data)}"
+
+masked_device_id = mask_data(message_data['device_id'])
+masked_ip = mask_data(message_data['ip'])
 
 # PostgreSQL connection parameters
 db_params = {
@@ -35,7 +38,7 @@ try:
     connection = psycopg2.connect(**db_params)
     cursor = connection.cursor()
 
-    # Insert masked data into the user_logins table
+    # Insert masked data into user_logins table
     insert_query = """
     INSERT INTO user_logins
     (user_id, device_type, masked_ip, masked_device_id, locale, app_version, create_date)
@@ -61,4 +64,3 @@ finally:
         cursor.close()
         connection.close()
         print("PostgreSQL connection closed.")
-
