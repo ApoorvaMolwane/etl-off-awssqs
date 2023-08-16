@@ -27,7 +27,7 @@ db_params = {
     "user": "postgres",
     "password": "postgres",
     "host": "localhost",
-    "port": "5433"
+    "port": "5432"
 }
 
 # Connect to PostgreSQL
