@@ -32,6 +32,7 @@ EXECUTION STEPS:
     postgres=# select * from user_logins;
 11. To install the boto library:
     pip install boto3 psycopg2
+12. The ip and device_id fields are masked using base64 encryption.
 13. To run the Python code:
     python main.py
 
